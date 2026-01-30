@@ -50,3 +50,10 @@ body {
 .animate-float {
   animation: float 10s ease-in-out infinite;
 }
+
+.bg-dots {
+  background-color: rgb(252, 253, 255);
+  background-image: radial-gradient(rgba(0, 0, 0, 0.06) 1px,
+      transparent 1px);
+  background-size: 18px 18px;
+}

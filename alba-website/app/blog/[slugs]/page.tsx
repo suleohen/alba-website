@@ -2,26 +2,26 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { blogPosts } from "@/lib/content";
 
-// Next.js 13+ için basit versiyon
-export default function BlogDetailPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const post = blogPosts.find((p) => p.slug === params.slug);
+type PageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export default async function BlogDetailPage({ params }: PageProps) {
+  const { slug } = await params;
+  const post = blogPosts.find((p) => p.slug === slug);
   
   if (!post) {
     notFound();
   }
 
-  const postIndex = blogPosts.findIndex((p) => p.slug === params.slug);
+  const postIndex = blogPosts.findIndex((p) => p.slug === slug);
 
   return (
     <div className="mx-auto w-full max-w-[800px] px-6 md:px-10">
       {/* Back navigation */}
       <div className="pt-10 md:pt-14">
         <Link
-          href="/blogs"
+          href="/blog"
           className="group inline-flex items-center gap-2 text-sm text-black/60 transition-colors hover:text-[#1800ad]"
         >
           <span className="transition-transform group-hover:-translate-x-1">
@@ -100,7 +100,7 @@ export default function BlogDetailPage({
         <div className="grid grid-cols-2 gap-6">
           {postIndex > 0 && (
             <Link
-              href={`/blogs/${blogPosts[postIndex - 1].slug}`}
+              href={`/blog/${blogPosts[postIndex - 1].slug}`}
               className="group rounded-xl border border-black/10 bg-white p-5 transition-all hover:border-[#1800ad]/30 hover:shadow-sm"
             >
               <p className="text-xs text-black/40">Previous</p>
@@ -112,7 +112,7 @@ export default function BlogDetailPage({
 
           {postIndex < blogPosts.length - 1 && (
             <Link
-              href={`/blogs/${blogPosts[postIndex + 1].slug}`}
+              href={`/blog/${blogPosts[postIndex + 1].slug}`}
               className="group rounded-xl border border-black/10 bg-white p-5 text-right transition-all hover:border-[#1800ad]/30 hover:shadow-sm"
             >
               <p className="text-xs text-black/40">Next</p>

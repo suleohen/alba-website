@@ -63,8 +63,8 @@ export default function WorksWall() {
               {/* Striking category header */}
               <div className="relative mb-12 md:mb-16">
                 {/* Background text */}
-                <div className="absolute -top-8 left-0 right-0 overflow-hidden opacity-[0.03] md:-top-12">
-                  <h2 className="whitespace-nowrap text-7xl font-bold tracking-tighter md:text-9xl">
+                <div className="absolute -top-8 left-0 right-0 overflow-hidden opacity-[0.08] md:-top-12">
+                  <h2 className="whitespace-nowrap text-7xl font-bold tracking-tighter md:text-9xl text-gray-800 origin-left transform scale-x-75">
                     {category.toUpperCase()}
                   </h2>
                 </div>

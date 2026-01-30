@@ -3,7 +3,10 @@ import BlogList from "@/components/blogs/BlogList";
 
 export default function BlogsPage() {
   return (
-    <div className="relative mx-auto w-full max-w-[1200px] px-6 md:px-10">
+    <>
+      {/* ✅ Only this page background (covers edges too) */}
+      <div className="fixed inset-0 -z-10 bg-[#f8f7f5]" />
+
       <BlogsHero />
       <BlogList />
 
@@ -31,6 +34,6 @@ export default function BlogsPage() {
           </div>
         </div>
       </footer>
-    </div>
+    </>
   );
 }

@@ -7,7 +7,7 @@ export const palette = {
 } as const;
 
 export const site = {
-  name: "Studio",
+  name: "Alba Studio",
   tagline: "Minimal work. Loud ideas.",
 } as const;
 
@@ -19,6 +19,7 @@ export const nav = [
   { label: "Journal", href: "/journal" },
   { label: "Experiential", href: "/experiential" },
   { label: "Works", href: "/works" },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ] as const;
 
@@ -196,6 +197,16 @@ export const blogPosts: BlogPost[] = [
     ],
   },
   {
+    slug: "second-blog-post",
+    title: "My Second Blog Post",
+    excerpt: "This is a test to make sure navigation works properly.",
+    content: [
+      "This is the first paragraph of my second blog post.",
+      "Here's another paragraph to test the layout.",
+      "And a final paragraph for good measure.",
+    ],
+  },
+    {
     slug: "second-blog-post",
     title: "My Second Blog Post",
     excerpt: "This is a test to make sure navigation works properly.",
