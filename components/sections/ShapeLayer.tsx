@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ShapeBase = {
   id: number;
@@ -37,8 +37,8 @@ const SHAPES: ShapeBase[] = [
 
 const COLORS = ["#F73914", "#E0F714", "#F7148D", "#8D14F7", "#5141F7"];
 
-// ✅ “Güzel duran” slotlar (istediğin gibi ekle/çıkar)
-// Not: 15 shape var, burada 20+ slot bıraktım ki varyasyon fazla olsun
+// Positions that look good (add/remove as needed)
+// Note: more slots than shapes, so each render has room for variation
 const POSITION_SLOTS: Array<{ top: string; left: string }> = [
   { top: "10%", left: "8%" },
   { top: "14%", left: "35%" },
@@ -69,7 +69,7 @@ const POSITION_SLOTS: Array<{ top: string; left: string }> = [
   { top: "92%", left: "52%" },
 ];
 
-// circle + rect boyut aralıkları (geniş)
+// size ranges for circles and rects (wide range)
 const SIZE_RANGES = {
   circle: { min: 80, max: 220 },
   rect: {
@@ -78,7 +78,7 @@ const SIZE_RANGES = {
   },
 };
 
-// deterministic PRNG (Math.random yok)
+// deterministic PRNG (no Math.random)
 function mulberry32(seed: number) {
   let a = seed;
   return function () {
@@ -94,7 +94,7 @@ function randBetween(r: () => number, min: number, max: number) {
   return Math.floor(r() * (max - min + 1)) + min;
 }
 
-// Fisher–Yates shuffle (seed'li)
+// Fisher–Yates shuffle (seeded)
 function shuffle<T>(arr: T[], r: () => number) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -104,16 +104,15 @@ function shuffle<T>(arr: T[], r: () => number) {
   return a;
 }
 
-function computeShapes(): ShapeComputed[] {
-  // ✅ Refresh’te değişsin diye seed’i Date.now() yaptık
-  const r = mulberry32(Date.now());
+function computeShapes(seed: number): ShapeComputed[] {
+  const r = mulberry32(seed);
 
-  // ✅ Slotları karıştır → her refresh’te farklı dağılsın
+  // Shuffle slots so each render gets a different layout
   const shuffledSlots = shuffle(POSITION_SLOTS, r);
 
   return SHAPES.map((shape, index) => {
-    // ✅ Aynı slot’a iki shape düşmesin diye sırayla alıyoruz
-    // slot sayısı yetmezse döngüye girer (ama biz bol tuttuk)
+    // Take slots in order so two shapes don't land on the same slot
+    // (wraps around if slots run out, though we have plenty)
     const slot = shuffledSlots[index % shuffledSlots.length];
 
     let width: number;
@@ -127,7 +126,7 @@ function computeShapes(): ShapeComputed[] {
       width = randBetween(r, SIZE_RANGES.rect.width.min, SIZE_RANGES.rect.width.max);
       height = randBetween(r, SIZE_RANGES.rect.height.min, SIZE_RANGES.rect.height.max);
 
-      // bazen yatay bazen dikey (daha doğal duruyor)
+      // sometimes horizontal, sometimes vertical (looks more natural)
       if (r() > 0.5) [width, height] = [height, width];
     }
 
@@ -139,14 +138,24 @@ function computeShapes(): ShapeComputed[] {
       height,
       color: COLORS[randBetween(r, 0, COLORS.length - 1)],
       delay: randBetween(r, 0, 60) / 10,
-      rotation: randBetween(r, -10, 10), // hafif rotation daha tatlı
+      rotation: randBetween(r, -10, 10), // slight rotation looks nicer
       opacity: randBetween(r, 4, 12) / 100,
     };
   });
 }
 
+// Fixed seed so server and client render the same layout on first paint,
+// avoiding a hydration mismatch. The layout is randomized after mount.
+const INITIAL_SEED = 1;
+
 export default function ShapeLayer() {
-  const [shapes] = useState<ShapeComputed[]>(computeShapes);
+  const [shapes, setShapes] = useState<ShapeComputed[]>(() =>
+    computeShapes(INITIAL_SEED)
+  );
+
+  useEffect(() => {
+    setShapes(computeShapes(Date.now()));
+  }, []);
 
   const renderShape = (shape: ShapeComputed) => {
     const baseStyle = {

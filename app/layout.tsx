@@ -1,15 +1,22 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { Rubik_Spray_Paint } from "next/font/google";
+import { Inter, Jost } from "next/font/google";
 
 import SiteHeader from "@/components/layout/SiteHeader";
 import PageContainer from "@/components/layout/PageContainer";
+import InteractiveDots from "@/components/home/InteractiveDots";
 
-const rubikSpray = Rubik_Spray_Paint({
-  weight: "400",
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-rubik-spray",
+  variable: "--font-inter",
+});
+
+// Geometric sans (Futura-style) for headings and the logo wordmark, per the
+// design brief's "futura gibi sans-serif, ciddi ve minimalist" direction.
+const jost = Jost({
+  subsets: ["latin"],
+  variable: "--font-jost",
 });
 
 export const metadata: Metadata = {
@@ -25,8 +32,9 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <body
-        className={`min-h-screen text-black antialiased ${rubikSpray.variable}`}
+        className={`min-h-screen text-black antialiased ${inter.variable} ${jost.variable}`}
       >
+        <InteractiveDots className="pointer-events-none fixed inset-0 -z-10" />
         <div className="relative z-10">
           <SiteHeader />
           <main className="py-20 md:py-24">

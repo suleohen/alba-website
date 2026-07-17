@@ -1,22 +1,22 @@
 import Hero from "@/components/home/Hero";
+import HomeShapes from "@/components/home/HomeShapes";
 import FeaturedGrid from "@/components/home/FeaturedGrid";
-import IndexLinks from "@/components/home/IndexLinks";
-import ShapeLayer from "@/components/sections/ShapeLayer";
 
 export default function HomePage() {
   return (
     <>
-      {/* ✅ SADECE HOME'DA SHAPES */}
-      <div className="pointer-events-none fixed inset-0 z-0">
-        <ShapeLayer />
-      </div>
-
-      {/* Home content */}
-      <div className="relative z-10 mx-auto w-full max-w-[1200px] px-6 md:px-10">
+      <div
+        className="fixed inset-0 -z-10"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 50% -10%, #ffffff 0%, #fbfbfb 55%, #f4f4f4 100%)",
+        }}
+      />
+      <div className="relative mx-auto w-full max-w-[1200px] px-6 md:px-10">
+        <HomeShapes />
         <Hero />
         <FeaturedGrid />
-        <IndexLinks />
-        <div className="mt-16 md:mt-20 pb-16 text-xs text-black/50">
+        <div className="mt-20 border-t border-black/10 pb-16 pt-8 text-center text-xs text-black/50 md:mt-24">
           © {new Date().getFullYear()} — All rights reserved.
         </div>
       </div>
